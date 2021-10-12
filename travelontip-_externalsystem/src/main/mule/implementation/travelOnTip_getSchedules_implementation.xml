@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<db:config name="Database_Config1" doc:name="Database Config" doc:id="4212ece1-205c-4fb6-9df6-64178c943f62" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="Antravalli2020$" database="travelontip" />
+	</db:config>
+	<flow name="travelOnTip_getSchedules_implementationFlow" doc:id="256cf575-89a8-4e76-ad50-435b41a02ffe" >
+		<logger level="INFO" doc:name="Logger" doc:id="d5e3726e-4ab2-461f-91cd-0471d0696337" message="in schedules implementation"/>
+		<db:select doc:name="Select" doc:id="3567bf96-5806-464b-b649-dc3d8e300648" config-ref="Database_Config1">
+			<db:sql ><![CDATA[select * from travelontip.schedules where companyname=:travelontip]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	travelontip:"travelontip"
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="6bfdd7de-b933-4563-8e6f-b202e8f2f408" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

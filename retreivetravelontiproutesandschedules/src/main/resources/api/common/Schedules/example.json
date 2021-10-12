@@ -1,0 +1,30 @@
+[
+                      {
+
+	"availableSeats": 20,
+	"departureDateTime": "2020-01-02T16:41:41",
+	"travelRoute": {
+		"destinationLocation": {
+			"locationCode": "klG-MN"
+
+		},
+		"originLocation": {
+			"locationCode": "BEN-SG"
+
+		}
+	}
+}, {
+
+	"availableSeats": 30,
+	"departureDateTime": "2020-01-02T16:41:41",
+	"travelRoute": {
+		"destinationLocation": {
+			"locationCode": "klG-MN"
+
+		},
+		"originLocation": {
+			"locationCode": "BEN-SG"
+
+		}
+	}
+}]     

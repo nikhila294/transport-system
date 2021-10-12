@@ -1,0 +1,30 @@
+#%RAML 1.0 DataType
+                type: array
+                items:
+                  type: object
+                  properties:
+                    availableSeats:
+                      type: integer
+                      example:
+                        30
+                    departureDateTime:
+                      type: string
+                      example:
+                         "2020-01-02T16:41:41"   
+                    travelRoute:
+                      type: object
+                      properties:
+                        destinationLocation:
+                          type: object
+                          properties:
+                            locationCode:
+                              type: string
+                              example:
+                                "BEN-SG"
+                        originLocation:
+                          type: object
+                          properties:
+                            locationCode:
+                              type: string
+                              example:
+                               "BEN-SG"  

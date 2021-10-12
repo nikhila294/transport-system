@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:request-config name="HTTP_Request_configuration1" doc:name="HTTP Request configuration" doc:id="d66ef8f9-4529-41c2-a403-3ceacb7fe0a8" >
+		<http:request-connection host="localhost" port="8082" />
+	</http:request-config>
+	<flow name="transaportType-transaportCompany-schedulesFlow" doc:id="34e50433-389a-4f4f-9c06-596a558e706e" >
+		<logger level="INFO" doc:name="Logger" doc:id="207c4909-125b-4a24-82bc-9b4e45a044c7" message="In Schedule Implimentation"/>
+		<http:request method="GET" doc:name="Request" doc:id="8d875ee9-3033-48b5-bfd5-034368123bfd" config-ref="HTTP_Request_configuration1" path="/travelontipCall/schedules">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"transactionId" : vars.transactionId
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="a134ff67-768b-42dc-852d-ebf98e0f2e69" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+output application/json
+---
+payload map(key,index) -> {
+	"availableseat":key.availableseat,
+	"departuredatetime":key.departuredatetime,
+	"travelRoute":{
+		"destinationLocation":{
+			"locationCode":	key.tolocation	},
+	"originLocation":{
+			"locationCode":	key.fromlocation	}
+			}
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

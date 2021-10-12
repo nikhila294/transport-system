@@ -1,0 +1,9 @@
+http:
+  host:localhost
+  port:8082
+  path:/travelontipCall
+db:
+  port:"3306"
+  user:"root"
+  password:"Antravalli2020$"
+  database:"travelontip"

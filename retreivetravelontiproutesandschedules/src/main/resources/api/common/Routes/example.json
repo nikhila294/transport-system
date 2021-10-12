@@ -1,0 +1,19 @@
+
+                                    [
+                                      {
+                		"originLocation": {
+                			"locationCode": "BEN-SG"
+                		},
+                		"destinationLocation": {
+                			"locationCode": "klG-MN"
+                		}
+                	},
+                	{
+                		"originLocation": {
+                			"locationCode": "BEN-SG"
+                		},
+                		"destinationLocation": {
+                			"locationCode": "klG-MN"
+                		}
+                	}
+                ]

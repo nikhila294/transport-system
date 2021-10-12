@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	<http:listener-config name="HTTP_Listener_config1" doc:name="HTTP Listener config" doc:id="2c7276f3-ad21-47f4-86f8-655f98b5bc17" >
+		<http:listener-connection host="localhost" port="8082" connectionIdleTimeout="60000"/>
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="2d7a3d27-2bb4-4418-83fe-a05bcaa5976a" file="config\localconfig.yaml" />
+	<flow name="travelontip-_externalsystemFlow" doc:id="4c5879be-a9b1-45f8-8913-e1c628e9299b" >
+		<http:listener doc:name="Listener" doc:id="f8d9b57e-ea64-44b9-86e1-47125edfaa58" config-ref="HTTP_Listener_config1" path="/travelontipCall/{serviceType}"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c255950f-1a77-4240-bdfc-b484146a23f4" message="request recieved for travel on tip"/>
+		<ee:transform doc:name="Transform Message" doc:id="ad612637-d5a1-4618-a1da-02ee7eb01311" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="serviceType" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.uriParams.serviceType]]></ee:set-variable>
+				<ee:set-variable variableName="transactionId" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.headers.transactionId]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="ae4d387e-3d86-4c5e-a49b-24e46b31daae" >
+			<when expression='#[vars.serviceType=="routes"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="7d3dfefe-ac80-4f07-aa0f-a527ad50faca" message="in route servicetype"/>
+				<flow-ref doc:name="Flow Reference" doc:id="3fe3890f-46af-4143-bc92-1faf42810ad5" name="travelOnTip_getRoutes_implementationFlow"/>
+			</when>
+			<when expression="#[vars.serviceType=='schedules']">
+				<logger level="INFO" doc:name="Logger" doc:id="148e0041-ac31-4891-89f7-e208731725b1" message="in schedule servicetype"/>
+				<flow-ref doc:name="Flow Reference" doc:id="735a08d8-da28-4eac-8b95-9a5162685dc7" name="travelOnTip_getSchedules_implementationFlow"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="6c72876d-baa0-4d15-b94e-d0810a28da00" message="Error not in route nor schedule"/>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="4469d630-e105-48db-ae42-1d6d97c6079d" message="response recieved for travel on tip"/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a3c2421d-2c42-419c-b616-024ca4ae9f58" >
+				<logger level="INFO" doc:name="Logger" doc:id="3d26450c-68fb-4368-b6a8-a24c902738f5" message="error recieved for travel on tip"/>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

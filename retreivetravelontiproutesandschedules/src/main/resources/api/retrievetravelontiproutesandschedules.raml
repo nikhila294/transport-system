@@ -1,0 +1,75 @@
+#%RAML 1.0
+title: RetrieveTravelonTipRoutesandSchedules
+description: retrives the data from travelontip API
+types: 
+  get400Response: !include /common/dataTypes/400ResponsedataType.raml
+  get404Response: !include  /common/dataTypes/404ResponsedataType.raml
+  get500Response: !include /common/dataTypes/500ResponsedataType.raml
+  getScheduledataTypes: !include /common/Schedules/schedulesdataType.raml
+  getRoutedataTypes : !include  /common/Routes/RoutesDataType.raml
+/{transportType}:
+  /{transportCompany}:
+    /routes:
+      get:
+        headers:
+          transactionId:
+            required: true
+            type: string
+            example:
+              "asdfg-asdfg"
+        responses:
+          200:
+            body:
+              application/json:
+                type: getRoutedataTypes
+                example: !include /common/Routes/example.json
+          400:
+            body:
+              application/json:
+                type: get400Response
+          404:
+            body:
+              application/json:
+                type: get404Response
+          500:
+            body:
+              application/json:
+                  type: get500Response      
+    /schedules:
+      get:
+        headers:
+          transactionId:
+            required: true
+            type: string
+            example:
+              "asdfg-asdfg"
+        queryParameters:
+          departureLocationCode:
+            required: false
+            type: string 
+            example:
+              "BN-SG"
+          destinationLocationCode:
+            required: false
+            type: string    
+            example:
+              "SF-FG"  
+        responses:
+          200:
+            body:
+              application/json:
+                type: getScheduledataTypes
+                example: !include /common/Schedules/example.json
+                     
+          400:
+            body:
+              application/json:
+                type: get400Response
+          404:
+            body:
+              application/json:
+                type: get404Response
+          500:
+            body:
+              application/json:
+                  type: get500Response 
